@@ -1,0 +1,1 @@
+g++ -o "/home/whale/projects/snake_game/bin/x64/Debug/snake_game.out" -Wl,--no-undefined -Wl,-L/home/whale/projects/snake_game/../../../../../Users/antho/Downloads/pdcurs35/win32 -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack /home/whale/projects/snake_game/obj/x64/Debug/main.o -lcurses
