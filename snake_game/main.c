@@ -4,31 +4,42 @@
 #include<curses.h>
 #include<pthread.h>
 #include<termios.h>
+#include<time.h>
+#include<sys/time.h>
 
 // define #
+#define MAX_QUEUE_SIZE 5
 enum dir { up = 'w', down = 's', left = 'a', right = 'd' };
-enum type { wall = -1, none = 0, body = 1, food = 2 };
+enum type { wall = -1, none = 0, body = 1, food = 2, forward = 3 };
 typedef struct { int type, lock; } tile;
 typedef struct { int x, y; } pos;
 struct termios info;
+struct itimerval timer;
 
 // declare # func
 tile** init_setting(int size, pos start_point);
 void change_head(char next_dir);
 void move_head();
 void print();
-void growup();
+void *inp_key();
+void create_food();
 
 // declare # value
 tile** field;
 pos head;
-char next_dir;
+char next_dir, backup;
 int length;
 int size;
+char inp_list[MAX_QUEUE_SIZE] = { 0 };
+int front = 0, rear = 0;
+pthread_mutex_t for_queue = PTHREAD_MUTEX_INITIALIZER;
+bool exit_condition = TRUE;
 
 int main(void)
 {
     info.c_lflag |= ICANON;
+    timer.it_value.tv_sec = 0;
+    timer.it_value.tv_usec = 5000;
 
     // set size
     initscr();
@@ -38,27 +49,53 @@ int main(void)
     // start initialization
     length = 3;
     next_dir = left;
+    backup = left;
     head.x = size / 2, head.y = size / 2;
     field = init_setting(size, head);
-    // start game
+    create_food();
+    
+    // create thread for insert inp_key
+    pthread_t t1;
+    pthread_create(&t1, NULL, inp_key, NULL);
 
-    field[15][15].type = food;
-    field[20][20].type = food; // sample food
-    field[38][13].type = food;
+    // start game
+    //field[15][15].type = food;
+    //field[20][20].type = food; // sample food
+    //field[38][13].type = food;
 
     print();
     refresh();
     while (1)
     {
-        fflush(stdin);
-        scanf("%c", &next_dir);
+        //fflush(stdin);
+        //scanf("%c", &next_dir);
+        sleep(1);
+        //setitimer(ITIMER_REAL, &timer, NULL);
+        pthread_mutex_lock(&for_queue);
+        if (front != rear)
+        {
+            next_dir = inp_list[front++];
+            backup = next_dir;
+            if (front == MAX_QUEUE_SIZE)
+                front = 0;
+        }
+        else
+        {
+            next_dir = backup;
+        }
+        pthread_mutex_unlock(&for_queue);
+
         change_head(next_dir);
         if (field[head.y][head.x].lock != 0) // end condition
+        {
+            exit_condition = FALSE;
             break;
+        }
         move_head();
         print();
         refresh();
     }
+    pthread_join(t1, NULL);
     endwin();
 
     return 0;
@@ -131,7 +168,10 @@ void move_head()
 {
     // change field status
     if (field[head.y][head.x].type == food) // if food
+    {
         length++;
+        create_food();
+    }
     else
     {
         for (int i = 1; i < size - 1; i++)
@@ -150,7 +190,7 @@ void move_head()
 
 }
 
-void print()
+void print()                                        // LOCALE 이용해서 body,wall - ■, none - □, food - ★, head - ● 표현해야함
 {
     move(0, 0);
     for (int i = 0; i < size; i++)
@@ -160,19 +200,49 @@ void print()
             switch (field[i][j].type)
             {
             case wall:
+                //addstr("■");
                 addstr("*");
                 break;
             case body:
+                //addstr("■");
                 addstr("@");
                 break;
             case none:
+                //addstr("□");
                 addstr(" ");
                 break;
             case food:
+                //addstr("★");
                 addstr("*");
+                break;
+            case forward:
+                //addstr("●");
                 break;
             }
         }
         move(i + 1, 0);
     }
+}
+
+void *inp_key()
+{
+    while (exit_condition)
+    {
+        char input;
+        scanf("%c", &input);
+        pthread_mutex_lock(&for_queue);
+        inp_list[rear++] = input;
+        if (rear == MAX_QUEUE_SIZE)
+            rear = 0;
+        pthread_mutex_unlock(&for_queue);
+    }
+}
+
+void create_food()
+{
+    int x, y;
+    srand((unsigned int)time(NULL));
+    x = rand() % (size - 3) + 1;
+    y = rand() % (size - 3) + 1;
+    field[y][x].type = food;
 }
