@@ -10,6 +10,10 @@
 #include<wchar.h>
 
 // define #
+#define wallp "ㅁ"
+#define bodyp "ㅇ"
+#define foodp "★"
+#define nonep "  "
 #define MAX_QUEUE_SIZE 5
 enum dir { up = 'w', down = 's', left = 'a', right = 'd' };
 enum type { wall = -1, none = 0, body = 1, food = 2, forward = 3 };
@@ -217,7 +221,11 @@ void move_head()
 
 void print()                                        // LOCALE 이용해서 body,wall - ■, none - □, food - ★, head - ● 표현해야함
 {
-    //wchar_t *c[4];
+    //wchar_t* b = L"■";
+    //wchar_t* n = L"□";
+    //wchar_t* w = L"■";
+    //wchar_t* f = L"★";
+    //wchar_t* h = L"●";
     //c[0] = "■";
     //c[1] = "□";
     //c[2] = '★';
@@ -233,20 +241,19 @@ void print()                                        // LOCALE 이용해서 body,wall
             switch (field[i][j].type)
             {
             case wall:
-//                addwstr("■");
-                addstr(a);
+                printw(wallp);
                 break;
             case body:
-                addwstr("■");
+                printw(bodyp);
                 break;
             case none:
-                addwstr("□");
+                printw(nonep);
                 break;
             case food:
-                addwstr("★");
+                printw(foodp);
                 break;
             case forward:
-                addwstr("●");
+                printw(bodyp);
                 break;
             }
         }
