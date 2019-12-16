@@ -1,13 +1,12 @@
 #include<stdio.h>
 #include<unistd.h>
 #include<stdlib.h>
-#include<curses.h>
+#include<ncursesw/curses.h>
 #include<pthread.h>
 #include<termios.h>
 #include<time.h>
-#include<stddef.h>
-#include<locale.h>
-#include<wchar.h>
+#include <stddef.h>
+#include <locale.h>
 
 // define #
 #define MAX_QUEUE_SIZE 5
@@ -22,7 +21,7 @@ tile** init_setting(int size, pos start_point);
 void change_head(char next_dir);
 void move_head();
 void print();
-void *inp_key();
+void* inp_key();
 void create_food();
 
 // declare # value
@@ -54,9 +53,7 @@ int main(void)
             printf("Set too small size, set again greater than 10.\n");
     }
     */
-    //usleep(120000);
-    //fflush(stdin);
-    size = 27;
+    size = 51;
     initscr();
     clear();
 
@@ -77,8 +74,9 @@ int main(void)
 
     // start game
     while (1)
-    {      
-        usleep(120000);
+    {
+        //fflush(stdin);
+        usleep(150000);
         pthread_mutex_lock(&for_queue);
         if (front != rear)
         {
@@ -103,20 +101,16 @@ int main(void)
     }
     pthread_join(t1, NULL);
     clear();
-    move(size / 2, size / 2);
-    addstr("Your score : ");
-    printw("%d", length);
-    refresh();
-/*
-    move(size / 2, size / 2);
-    addstr("Your score : ");
-    addstr((char)length);
-    addstr("\nTry again? (Y/N)");
-    char coin = 'y';
-    scanf("%c", &coin);
-    if (coin == 'n')
-        break;    
-*/
+    /*
+        move(size / 2, size / 2);
+        addstr("Your score : ");
+        addstr((char)length);
+        addstr("\nTry again? (Y/N)");
+        char coin = 'y';
+        scanf("%c", &coin);
+        if (coin == 'n')
+            break;
+    */
     endwin();
 
     return 0;
@@ -201,27 +195,23 @@ void move_head()
                     field[i][j].lock--;
     }
 
+    field[head.y][head.x].type = body;
     field[head.y][head.x].lock = length;
 
     for (int i = 1; i < size - 1; i++)
         for (int j = 1; j < size - 1; j++)
-        {
             if (field[i][j].lock == 0 && field[i][j].type == body)
                 field[i][j].type = none;
-            if (field[i][j].lock > 0 && field[i][j].type == forward)
-                field[i][j].type = body;
-        }
 
-    field[head.y][head.x].type = forward;
 }
 
 void print()                                        // LOCALE 이용해서 body,wall - ■, none - □, food - ★, head - ● 표현해야함
 {
-    //wchar_t *c[4];
-    //c[0] = "■";
-    //c[1] = "□";
-    //c[2] = '★';
-    //c[3] = '●';
+    //wchar_t Board[4];
+    //Board[0] = L'■';
+    //Board[1] = L'□';
+    //Board[2] = L'★';
+    //Board[3] = L'●';
     //printf("%lc", Board[0]);
     //printf("%lc", Board[1]);
     //printf("%lc", Board[2]);
@@ -233,20 +223,19 @@ void print()                                        // LOCALE 이용해서 body,wall
             switch (field[i][j].type)
             {
             case wall:
-//                addwstr("■");
-                addstr(a);
+                addstr("■");
                 break;
             case body:
-                addwstr("■");
+                addstr("■");
                 break;
             case none:
-                addwstr("□");
+                addstr("□");
                 break;
             case food:
-                addwstr("★");
+                addstr("★");
                 break;
             case forward:
-                addwstr("●");
+                addstr("●");
                 break;
             }
         }
@@ -254,7 +243,7 @@ void print()                                        // LOCALE 이용해서 body,wall
     }
 }
 
-void *inp_key()
+void* inp_key()
 {
     while (exit_condition)
     {

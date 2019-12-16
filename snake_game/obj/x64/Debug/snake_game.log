@@ -5,11 +5,18 @@
   원격 빌드를 시작하는 중
   소스를 컴파일하는 중:
   main.c
-C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(95,47): warning : conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
-C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(95,47): warning :      tile** tmp = (tile**)malloc(sizeof(tile*) * size);
-C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(95,47): warning :                                                ^
-C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(98,45): warning : conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
-C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(98,45): warning :          tmp[i] = (tile*)malloc(sizeof(tile) * size);
-C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(98,45): warning :                                              ^
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(79,9): warning : implicit declaration of function ‘usleep’; did you mean ‘sleep’? [-Wimplicit-function-declaration]
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(79,9): warning :          usleep(150000);
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(79,9): warning :          ^~~~~~
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(79,9): warning :          sleep
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(122,47): warning : conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(122,47): warning :      tile** tmp = (tile**)malloc(sizeof(tile*) * size);
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(122,47): warning :                                                ^
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(125,45): warning : conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(125,45): warning :          tmp[i] = (tile*)malloc(sizeof(tile) * size);
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(125,45): warning :                                              ^
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(258,1): warning : control reaches end of non-void function [-Wreturn-type]
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(258,1): warning :  }
+C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\main.c(258,1): warning :  ^
   개체를 연결하는 중
   snake_game.vcxproj -> C:\Whale\WorkSpace\Github\SP-20192-Team3\snake_game\bin\x64\Debug\snake_game.out
