@@ -102,19 +102,7 @@ int main()
 	move((size / 2) + 1, size + 50);
 	addstr("game over");
 	refresh();
-	/*
-	clear();
-	refresh();
-	move(size / 2, size / 2);
-	addstr("Try again? (Y/N): ");
-	refresh();
-	char coin = 'y';
-	gets(&coin);
-	fflush(stdin);
-	if (coin == 'n')
-		break;
-	refresh();
-	*/
+
 	pthread_join(t1, NULL);
 	endwin();
 
