@@ -16,7 +16,7 @@ def my_callback_s(channel):
 
 def my_callback_a(channel):
     pyautogui.press('a')
-    waaasssdd
+ 
 def my_callback_d(channel):
     pyautogui.press('d')
 
